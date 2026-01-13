@@ -1,40 +1,41 @@
 # Remote PC Power-On (Wake-on-LAN) ⚡
 
 ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
-![Network](https://img.shields.io/badge/Network-Socket_Programming-blue?style=for-the-badge)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![Network](https://img.shields.io/badge/Network-UDP_Socket-blue?style=for-the-badge)
+![Protocol](https://img.shields.io/badge/Protocol-WoL-success?style=for-the-badge)
 
 ## 📖 Overview
 
-This is a C program that implements the **Wake-on-LAN (WoL)** protocol to remotely power on a computer over a network. It constructs and broadcasts a "Magic Packet" containing the target machine's MAC address.
+A raw C implementation of the **Wake-on-LAN (WoL)** protocol. This tool allows a user to turn on a remote computer within the same Local Area Network (LAN) by broadcasting a specially compliant UDP packet known as the "Magic Packet".
 
-## ⚙️ How It Works
+## 💻 Technical Implementation
 
-The program creates a UDP socket and broadcasts a packet structued as:
-1.  **Synchronization Stream**: 6 bytes of `0xFF`.
-2.  **Target Details**: The target device's MAC address repeated 16 times.
+### Socket Programming
+The program operates at the Transport Layer using **UDP (User Datagram Protocol)** because WoL is a connectionless broadcast protocol.
+-   **Socket Creation**: `socket(AF_INET, SOCK_DGRAM, 0)` creates a datagram socket.
+-   **Broadcast Option**: `setsockopt(..., SO_BROADCAST, ...)` is crucial; it explicitly permits the socket to send packets to the broadcast address (`255.255.255.255` or subnet-specific).
 
-## 🛠️ Configuration
+### The "Magic Packet" Structure
+The standard Magic Packet frame is 102 bytes long:
+1.  **Synchronization Stream** (6 Bytes): `0xFF 0xFF 0xFF 0xFF 0xFF 0xFF`.
+2.  **Target MAC Sequence** (96 Bytes): The target NIC's 48-bit (6-byte) MAC address repeated 16 times.
 
-Before compiling, you **must** update the source code with your target machine's MAC address:
+### Logic Flow
+1.  **Buffer Initialization**: An unsigned char array `toSend[102]` is allocated.
+2.  **Payload Construction**: Loops populate the sync stream and the 16 MAC repetitions using `memcpy` or direct assignment.
+3.  **Transmission**: `sendto()` blasts the buffer to port `9` (standard WoL port) at the broadcast IP.
 
-Open `ptr.c` and modify lines 40-45:
-```c
-mac[0] = 0xab; // 1st octet
-mac[1] = 0xcd; // ...
-// ...
+## 🛠️ Usage & Compilation
+
+**Prerequisite**: Edit `ptr.c` to set the `mac` array to your target machine's hardware address.
+
+```bash
+# Compile
+gcc ptr.c -o wake_pc
+
+# Execute
+./wake_pc
 ```
-
-## 🚀 Usage
-
-1.  **Compile** the program:
-    ```bash
-    gcc ptr.c -o wake_pc
-    ```
-2.  **Run** the executable:
-    ```bash
-    ./wake_pc
-    ```
 
 ## 🤝 Contributing
 
