@@ -1,52 +1,50 @@
-# Remote PC Power On (Wake-on-LAN) 🔌
+# Remote PC Power-On (Wake-on-LAN) ⚡
 
-A lightweight **C program** that enables you to remotely power on a computer over a Local Area Network (LAN) using the **Wake-on-LAN (WOL)** protocol. It constructs and broadcasts a "Magic Packet" to wake the target machine.
+![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
+![Network](https://img.shields.io/badge/Network-Socket_Programming-blue?style=for-the-badge)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 
-![C](https://img.shields.io/badge/Language-C-A8B9CC?style=for-the-badge&logo=c&logoColor=white)
+## 📖 Overview
 
-## ✨ Features
+This is a C program that implements the **Wake-on-LAN (WoL)** protocol to remotely power on a computer over a network. It constructs and broadcasts a "Magic Packet" containing the target machine's MAC address.
 
-- **Wake-on-LAN**: Uses industry-standard Magic Packets.
-- **Socket Programming**: Demonstrates raw UDP socket usage in C.
-- **Network Broadcast**: Broadcasts packets to the local subnet.
+## ⚙️ How It Works
 
-## 🚀 Getting Started
+The program creates a UDP socket and broadcasts a packet structued as:
+1.  **Synchronization Stream**: 6 bytes of `0xFF`.
+2.  **Target Details**: The target device's MAC address repeated 16 times.
 
-### Prerequisites
+## 🛠️ Configuration
 
-- A C Compiler (GCC).
-- Target PC must have Wake-on-LAN enabled in BIOS/UEFI.
+Before compiling, you **must** update the source code with your target machine's MAC address:
 
-### Installation & Usage
+Open `ptr.c` and modify lines 40-45:
+```c
+mac[0] = 0xab; // 1st octet
+mac[1] = 0xcd; // ...
+// ...
+```
 
-1.  **Clone the repository**:
+## 🚀 Usage
+
+1.  **Compile** the program:
     ```bash
-    git clone https://github.com/officialsimranagarwal/Program-to-remotely-Power-On-a-PC-.git
-    cd Program-to-remotely-Power-On-a-PC-
+    gcc ptr.c -o wake_pc
     ```
-
-2.  **Configure**:
-    - Open `ptr.c` and update the MAC Address and Broadcast IP to match your network.
-
-3.  **Compile the code**:
+2.  **Run** the executable:
     ```bash
-    gcc ptr.c -o wol
+    ./wake_pc
     ```
-
-4.  **Run the application**:
-    ```bash
-    ./wol
-    ```
-
-## 🛠️ Tech Stack
-
-- **Language**: C
-- **Networking**: BSD Sockets (UDP)
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please check the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-## 📄 License
+## 👤 Author
 
-This project is open source and available under the [MIT License](LICENSE).
+**Simran Agarwal**
+-   [Profile](https://github.com/officialsimranagarwal)
+-   [LinkedIn](https://linkedin.com/in/simran-agarwal-54751b191)
+
+---
+*Generated with ❤️ by Simran Agarwal*
